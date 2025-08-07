@@ -36,35 +36,36 @@ export const Header = () => {
             </SheetHeader>
             <div className="px-5">
               {session?.user ? (
-                <>
-                  <div className="flex justify-between space-y-6">
-                    <div className="flex items-center gap-3">
-                      <Avatar>
-                        <AvatarImage
-                          src={session?.user?.image as string | undefined}
-                        />
-                        <AvatarFallback>
-                          {session?.user?.name?.split(" ")?.[0]?.[0]}
-                          {session?.user?.name?.split(" ")?.[1]?.[0]}
-                        </AvatarFallback>
-                      </Avatar>
+                <div className="flex flex-col space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Avatar>
+                      <AvatarImage
+                        src={session?.user?.image as string | undefined}
+                      />
+                      <AvatarFallback>
+                        {session?.user?.name?.split(" ")?.[0]?.[0]}
+                        {session?.user?.name?.split(" ")?.[1]?.[0]}
+                      </AvatarFallback>
+                    </Avatar>
 
-                      <div>
-                        <h3 className="font-semibold">{session?.user?.name}</h3>
-                        <span className="text-muted-foreground block text-xs">
-                          {session?.user?.email}
-                        </span>
-                      </div>
+                    <div>
+                      <h3 className="truncate font-semibold">
+                        {session?.user?.name}
+                      </h3>
+                      <span className="text-muted-foreground block truncate text-xs">
+                        {session?.user?.email}
+                      </span>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => authClient.signOut()}
-                    >
-                      <LogOutIcon />
-                    </Button>
                   </div>
-                </>
+                  <Button
+                    variant="outline"
+                    onClick={() => authClient.signOut()}
+                    className="w-full"
+                  >
+                    <LogOutIcon className="mr-2 h-4 w-4" />
+                    Sair
+                  </Button>
+                </div>
               ) : (
                 <div className="flex items-center justify-between">
                   <h2 className="font-semibold">Olá. Faça seu login!</h2>
