@@ -49,7 +49,7 @@ const Cart = () => {
                     productVariantName={item.productVariant.name}
                     productVariantImageUrl={item.productVariant.imageUrl}
                     productVariantPriceInCents={
-                      item.productVariant.priceInCents * item.quantity
+                      item.productVariant.priceInCents
                     }
                     quantity={item.quantity}
                   />
