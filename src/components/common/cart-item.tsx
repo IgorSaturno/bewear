@@ -1,6 +1,9 @@
-import { PlusIcon, TrashIcon } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { MinusIcon, PlusIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
+import { toast } from "sonner";
 
+import { removeProductFromCart } from "@/actions/remove-cart-item";
 import { formatCentsToBRL } from "@/helpers/money";
 
 import { Button } from "../ui/button";
@@ -22,6 +25,26 @@ const CartItem = ({
   productVariantPriceInCents,
   quantity,
 }: CartItemProps) => {
+  const queryClient = useQueryClient();
+  const removeProductFromCartMutation = useMutation({
+    mutationKey: ["remove-cart-product"],
+    mutationFn: () => removeProductFromCart({ cartItemId: id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+  });
+
+  const handleDeleteClick = () => {
+    removeProductFromCartMutation.mutate(undefined, {
+      onSuccess: () => {
+        toast.success("Produto removido do carrinho");
+      },
+      onError: () => {
+        toast.error("Erro ao remover produto do carrinho");
+      },
+    });
+  };
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -38,19 +61,24 @@ const CartItem = ({
             {productVariantName}
           </p>
           <div className="flex w-[100px] items-center justify-between rounded-lg border p-1">
-            <Button className="h-4 w-4 p-0" variant="ghost" onClick={() => {}}>
-              <TrashIcon className="h-3 w-3" />
+            <Button className="h-4 w-4" variant="ghost" onClick={() => {}}>
+              <MinusIcon />
             </Button>
             <p className="text-xs font-medium">{quantity}</p>
-            <Button className="h-4 w-4 p-0" variant="ghost" onClick={() => {}}>
-              <PlusIcon className="h-3 w-3" />
+            <Button className="h-4 w-4" variant="ghost" onClick={() => {}}>
+              <PlusIcon />
             </Button>
           </div>
         </div>
       </div>
-      <p className="text-sm font-bold">
-        {formatCentsToBRL(productVariantPriceInCents)}
-      </p>
+      <div className="flex flex-col items-end justify-center gap-2">
+        <Button variant="outline" size="icon" onClick={handleDeleteClick}>
+          <TrashIcon />
+        </Button>
+        <p className="text-sm font-bold">
+          {formatCentsToBRL(productVariantPriceInCents)}
+        </p>
+      </div>
     </div>
   );
 };
