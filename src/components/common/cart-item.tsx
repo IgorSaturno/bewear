@@ -3,9 +3,9 @@ import Image from "next/image";
 import { toast } from "sonner";
 
 import { formatCentsToBRL } from "@/helpers/money";
-import { useDecreaseCartProduct } from "@/hooks/mutation/decrease-cart-product-quantity";
-import { useIncreaseCartProduct } from "@/hooks/mutation/increase-cart-product-quantity";
-import { useRemoveProductFromCart } from "@/hooks/mutation/remove-product-from-cart";
+import { useDecreaseCartProduct } from "@/hooks/mutation/use-decrease-cart-product-quantity";
+import { useIncreaseCartProduct } from "@/hooks/mutation/use-increase-cart-product-quantity";
+import { useRemoveProductFromCart } from "@/hooks/mutation/use-remove-product-from-cart";
 
 import { Button } from "../ui/button";
 
