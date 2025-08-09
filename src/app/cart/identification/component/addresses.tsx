@@ -4,7 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
-import z from "zod";
+
+import {
+  createShippingAddressSchema,
+  CreateShippingAddressSchema,
+} from "@/actions/create-shipping-address/schema";
+import { useCreateShippingAddress } from "@/hooks/mutation/use-create-shipping-address";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,41 +27,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const Addresses = () => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
-  const formSchema = z.object({
-    email: z.email({ message: "Email inválido." }),
-    fullName: z
-      .string()
-      .trim()
-      .min(1, { message: "Nome completo é obrigatório." }),
-    cpf: z
-      .string()
-      .trim()
-      .transform((value) => value.replace(/\D/g, ""))
-      .refine((value) => /^\d{11}$/.test(value), { message: "CPF inválido." }),
-    phone: z
-      .string()
-      .trim()
-      .transform((value) => value.replace(/\D/g, ""))
-      .refine((value) => /^\d{10,11}$/.test(value), {
-        message: "Celular inválido.",
-      }),
-    cep: z
-      .string()
-      .trim()
-      .transform((value) => value.replace(/\D/g, ""))
-      .refine((value) => /^\d{8}$/.test(value), { message: "CEP inválido." }),
-    address: z.string().trim().min(1, { message: "Endereço é obrigatório." }),
-    number: z.string().trim().min(1, { message: "Número é obrigatório." }),
-    complement: z.string().optional(),
-    district: z.string().trim().min(1, { message: "Bairro é obrigatório." }),
-    city: z.string().trim().min(1, { message: "Cidade é obrigatória." }),
-    state: z.string().trim().min(1, { message: "Estado é obrigatório." }),
-  });
+  const createShippingAddressMutation = useCreateShippingAddress();
 
-  type FormValues = z.infer<typeof formSchema>;
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<CreateShippingAddressSchema>({
+    resolver: zodResolver(createShippingAddressSchema),
     defaultValues: {
       email: "",
       fullName: "",
@@ -72,8 +46,13 @@ const Addresses = () => {
     },
   });
 
-  const onSubmit = (values: FormValues) => {
-    void Promise.resolve(console.log(values));
+  const onSubmit = (values: CreateShippingAddressSchema) => {
+    createShippingAddressMutation.mutate(values, {
+      onSuccess: () => {
+        form.reset();
+        setSelectedAddress(null);
+      },
+    });
   };
   return (
     <Card>
@@ -301,8 +280,14 @@ const Addresses = () => {
                 </CardContent>
 
                 <div className="px-6 pb-6">
-                  <Button type="submit" className="h-12 w-full text-base">
-                    Continuar com o pagamento
+                  <Button
+                    type="submit"
+                    className="h-12 w-full text-base"
+                    disabled={createShippingAddressMutation.isPending}
+                  >
+                    {createShippingAddressMutation.isPending
+                      ? "Salvando..."
+                      : "Continuar com o pagamento"}
                   </Button>
                 </div>
               </form>
