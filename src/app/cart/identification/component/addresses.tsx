@@ -6,11 +6,9 @@ import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 
 import {
-  createShippingAddressSchema,
   CreateShippingAddressSchema,
+  createShippingAddressSchema,
 } from "@/actions/create-shipping-address/schema";
-import { useCreateShippingAddress } from "@/hooks/mutation/use-create-shipping-address";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -24,10 +22,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useCreateShippingAddress } from "@/hooks/mutation/use-create-shipping-address";
+import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
 
 const Addresses = () => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const createShippingAddressMutation = useCreateShippingAddress();
+  const { data: addresses, isLoading } = useShippingAddresses();
 
   const form = useForm<CreateShippingAddressSchema>({
     resolver: zodResolver(createShippingAddressSchema),
@@ -60,16 +61,58 @@ const Addresses = () => {
         <CardTitle>Identificação</CardTitle>
       </CardHeader>
       <CardContent>
-        <RadioGroup value={selectedAddress} onValueChange={setSelectedAddress}>
-          <Card>
-            <CardContent>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="add_new" id="add_new" />
-                <Label htmlFor="add_new">Adicionar novo endereço</Label>
-              </div>
-            </CardContent>
-          </Card>
-        </RadioGroup>
+        {isLoading ? (
+          <div className="flex justify-center py-8">
+            <p className="text-muted-foreground">Carregando endereços...</p>
+          </div>
+        ) : (
+          <RadioGroup
+            value={selectedAddress}
+            onValueChange={setSelectedAddress}
+          >
+            {addresses?.map((address) => (
+              <Card key={address.id}>
+                <CardContent>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value={address.id} id={address.id} />
+                    <div className="flex-1">
+                      <Label htmlFor={address.id} className="cursor-pointer">
+                        <div className="space-y-1">
+                          {/* <p className="font-medium">{address.recipientName}</p> */}
+                          <p className="text-muted-foreground text-sm">
+                            {address.recipientName}, {address.street},{" "}
+                            {address.number}
+                            {address.complement &&
+                              `, ${address.complement}`} -{" "}
+                            {address.neighborhood}, {address.city} -{" "}
+                            {address.state}, CEP: {address.zipCode}
+                          </p>
+                        </div>
+                      </Label>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+
+            <Card>
+              <CardContent>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="add_new" id="add_new" />
+                  <Label htmlFor="add_new">Adicionar novo endereço</Label>
+                </div>
+              </CardContent>
+            </Card>
+          </RadioGroup>
+        )}
+
+        {selectedAddress && selectedAddress !== "add_new" && (
+          <div className="mt-6">
+            <Button className="h-12 w-full text-base">
+              Continuar com o pagamento
+            </Button>
+          </div>
+        )}
 
         {selectedAddress === "add_new" && (
           <Card className="mt-6">
