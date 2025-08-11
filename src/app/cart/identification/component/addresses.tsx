@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
@@ -27,6 +28,8 @@ import { useCreateShippingAddress } from "@/hooks/mutation/use-create-shipping-a
 import { useUpdateCartShippingAddress } from "@/hooks/mutation/use-update-cart-shipping-address";
 import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
 
+import { formatAddress } from "../../helpers/address";
+
 interface AddressesProps {
   shippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
   defaultShippingAddressId: string | null;
@@ -36,6 +39,7 @@ const Addresses = ({
   shippingAddresses,
   defaultShippingAddressId,
 }: AddressesProps) => {
+  const router = useRouter();
   const [selectedAddress, setSelectedAddress] = useState<string | null>(
     defaultShippingAddressId || null,
   );
@@ -74,11 +78,12 @@ const Addresses = ({
     });
   };
 
-  const handleSelectExistingAddress = () => {
+  const handleGoToPayment = () => {
     if (selectedAddress && selectedAddress !== "add_new") {
       updateCartShippingAddressMutation.mutate({
         shippingAddressId: selectedAddress,
       });
+      router.push("/cart/confirmation");
     }
   };
   return (
@@ -104,14 +109,8 @@ const Addresses = ({
                     <div className="flex-1">
                       <Label htmlFor={address.id} className="cursor-pointer">
                         <div className="space-y-1">
-                          {/* <p className="font-medium">{address.recipientName}</p> */}
                           <p className="text-muted-foreground text-sm">
-                            {address.recipientName}, {address.street},{" "}
-                            {address.number}
-                            {address.complement &&
-                              `, ${address.complement}`} -{" "}
-                            {address.neighborhood}, {address.city} -{" "}
-                            {address.state}, CEP: {address.zipCode}
+                            {formatAddress(address)}
                           </p>
                         </div>
                       </Label>
@@ -136,12 +135,12 @@ const Addresses = ({
           <div className="mt-6">
             <Button
               className="h-12 w-full text-base"
-              onClick={handleSelectExistingAddress}
+              onClick={handleGoToPayment}
               disabled={updateCartShippingAddressMutation.isPending}
             >
               {updateCartShippingAddressMutation.isPending
                 ? "Salvando..."
-                : "Continuar com o pagamento"}
+                : "Continuar para pagamento"}
             </Button>
           </div>
         )}
