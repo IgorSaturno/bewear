@@ -10,7 +10,9 @@ export const useFinishOrder = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: getUseFinishOrderQueryKey(),
-    mutationFn: finishOrder,
+    mutationFn: async () => {
+      return await finishOrder();
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: getUseCartQueryKey() });
     },

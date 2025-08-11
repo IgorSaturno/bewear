@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
+import { toast } from "sonner";
 
 import {
   CreateShippingAddressSchema,
@@ -66,24 +67,33 @@ const Addresses = ({
     },
   });
 
-  const onSubmit = (values: CreateShippingAddressSchema) => {
-    createShippingAddressMutation.mutate(values, {
-      onSuccess: (newAddress) => {
-        updateCartShippingAddressMutation.mutate({
-          shippingAddressId: newAddress.id,
-        });
-        form.reset();
-        setSelectedAddress(null);
-      },
-    });
+  const onSubmit = async (values: CreateShippingAddressSchema) => {
+    try {
+      const newAddress =
+        await createShippingAddressMutation.mutateAsync(values);
+      form.reset();
+      setSelectedAddress(newAddress.id);
+      await updateCartShippingAddressMutation.mutateAsync({
+        shippingAddressId: newAddress.id,
+      });
+      toast.success("Endereço criado e selecionado com sucesso!");
+    } catch (error) {
+      toast.error("Erro ao criar endereço. Tente novamente.");
+      console.error(error);
+    }
   };
 
-  const handleGoToPayment = () => {
-    if (selectedAddress && selectedAddress !== "add_new") {
-      updateCartShippingAddressMutation.mutate({
+  const handleGoToPayment = async () => {
+    if (!selectedAddress || selectedAddress === "add_new") return;
+    try {
+      await updateCartShippingAddressMutation.mutateAsync({
         shippingAddressId: selectedAddress,
       });
+      toast.success("Endereço selecionado para entrega!");
       router.push("/cart/confirmation");
+    } catch (error) {
+      toast.error("Erro ao selecionar endereço. Tente novamente.");
+      console.error(error);
     }
   };
   return (
