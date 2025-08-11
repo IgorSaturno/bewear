@@ -24,15 +24,23 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { shippingAddressTable } from "@/db/schema";
 import { useCreateShippingAddress } from "@/hooks/mutation/use-create-shipping-address";
+import { useUpdateCartShippingAddress } from "@/hooks/mutation/use-update-cart-shipping-address";
 import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
 
 interface AddressesProps {
   shippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
+  defaultShippingAddressId: string | null;
 }
 
-const Addresses = ({ shippingAddresses }: AddressesProps) => {
-  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
+const Addresses = ({
+  shippingAddresses,
+  defaultShippingAddressId,
+}: AddressesProps) => {
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(
+    defaultShippingAddressId || null,
+  );
   const createShippingAddressMutation = useCreateShippingAddress();
+  const updateCartShippingAddressMutation = useUpdateCartShippingAddress();
   const { data: addresses, isLoading } = useShippingAddresses({
     initialData: shippingAddresses,
   });
@@ -56,11 +64,22 @@ const Addresses = ({ shippingAddresses }: AddressesProps) => {
 
   const onSubmit = (values: CreateShippingAddressSchema) => {
     createShippingAddressMutation.mutate(values, {
-      onSuccess: () => {
+      onSuccess: (newAddress) => {
+        updateCartShippingAddressMutation.mutate({
+          shippingAddressId: newAddress.id,
+        });
         form.reset();
         setSelectedAddress(null);
       },
     });
+  };
+
+  const handleSelectExistingAddress = () => {
+    if (selectedAddress && selectedAddress !== "add_new") {
+      updateCartShippingAddressMutation.mutate({
+        shippingAddressId: selectedAddress,
+      });
+    }
   };
   return (
     <Card>
@@ -115,8 +134,14 @@ const Addresses = ({ shippingAddresses }: AddressesProps) => {
 
         {selectedAddress && selectedAddress !== "add_new" && (
           <div className="mt-6">
-            <Button className="h-12 w-full text-base">
-              Continuar com o pagamento
+            <Button
+              className="h-12 w-full text-base"
+              onClick={handleSelectExistingAddress}
+              disabled={updateCartShippingAddressMutation.isPending}
+            >
+              {updateCartShippingAddressMutation.isPending
+                ? "Salvando..."
+                : "Continuar com o pagamento"}
             </Button>
           </div>
         )}
@@ -333,11 +358,15 @@ const Addresses = ({ shippingAddresses }: AddressesProps) => {
                   <Button
                     type="submit"
                     className="h-12 w-full text-base"
-                    disabled={createShippingAddressMutation.isPending}
+                    disabled={
+                      createShippingAddressMutation.isPending ||
+                      updateCartShippingAddressMutation.isPending
+                    }
                   >
-                    {createShippingAddressMutation.isPending
+                    {createShippingAddressMutation.isPending ||
+                    updateCartShippingAddressMutation.isPending
                       ? "Salvando..."
-                      : "Continuar com o pagamento"}
+                      : "Salvar endereço"}
                   </Button>
                 </div>
               </form>
