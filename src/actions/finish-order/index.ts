@@ -46,28 +46,45 @@ export const finishOrder = async () => {
   );
 
   await db.transaction(async (tx) => {
+    if (!cart.shippingAddress) {
+      throw new Error("Shipping address not found");
+    }
     const [order] = await tx
       .insert(orderTable)
       .values({
-        ...cart.shippingAddress!,
-        userId: session.user.id!,
+        email: cart.shippingAddress.email,
+        zipCode: cart.shippingAddress.zipCode,
+        country: cart.shippingAddress.country,
+        phone: cart.shippingAddress.phone,
+        cpfOrCnpj: cart.shippingAddress.cpfOrCnpj,
+        city: cart.shippingAddress.city,
+        complement: cart.shippingAddress.complement,
+        address: cart.shippingAddress.address,
+        userId: session.user.id,
         totalPriceInCents,
         shippingAddressId: cart.shippingAddress!.id,
+        recipientName: cart.shippingAddress.recipientName,
+        street: cart.shippingAddress.street,
+        number: cart.shippingAddress.number,
+        state: cart.shippingAddress.state,
+        neighborhood: cart.shippingAddress.neighborhood,
       })
       .returning();
 
     if (!order) {
       throw new Error("Failed to create order");
     }
+
     const orderItemsPayload: Array<typeof orderItemTable.$inferInsert> =
       cart.items.map((item) => ({
         orderId: order.id,
-        productVariantId: item.productVariantId,
+        productVariantId: item.productVariant.id,
         quantity: item.quantity,
         priceInCents: item.productVariant.priceInCents,
       }));
 
     await tx.insert(orderItemTable).values(orderItemsPayload);
+    await tx.delete(cartTable).where(eq(cartTable.id, cart.id));
     await tx.delete(cartItemTable).where(eq(cartItemTable.cartId, cart.id));
   });
 };
