@@ -9,7 +9,9 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -25,12 +27,13 @@ const Cart = () => {
           <ShoppingBagIcon />
         </Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="rounded-l-3xl">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <ShoppingBagIcon size={20} className="text-gray-500" />
             Sacola
           </SheetTitle>
+          <SheetDescription />
         </SheetHeader>
 
         <div className="flex h-full flex-col px-5 pb-5">
@@ -57,30 +60,21 @@ const Cart = () => {
           </div>
           {cart?.items && cart.items.length > 0 && (
             <div className="flex flex-col gap-4">
-              <Separator />
-
               <div className="flex items-center justify-between text-xs">
-                <p>Subtotal</p>
-                <p>{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
+                <p className="text-sm font-medium">Subtotal</p>
+                <p className="text-sm font-medium text-gray-500">
+                  {formatCentsToBRL(cart?.totalPriceInCents ?? 0)}
+                </p>
               </div>
 
               <Separator />
 
-              <div className="flex items-center justify-between text-xs">
-                <p>Entrega</p>
-                <p>GRÁTIS</p>
-              </div>
-
-              <Separator />
-
-              <div className="flex items-center justify-between text-xs">
-                <p>Total</p>
-                <p>{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
-              </div>
-
-              <Button className="mt-5 rounded-full" asChild>
-                <Link href="/cart/identification">Finalizar Compra</Link>
+              <Button className="rounded-full" asChild size="lg">
+                <Link href="/cart/identification">Finalizar a Compra</Link>
               </Button>
+              <SheetClose asChild>
+                <p className="text-center underline">Continuar comprando</p>
+              </SheetClose>
             </div>
           )}
         </div>

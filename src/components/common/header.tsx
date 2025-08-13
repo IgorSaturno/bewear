@@ -1,6 +1,13 @@
 "use client";
 
-import { LogInIcon, LogOutIcon, MenuIcon } from "lucide-react";
+import {
+  HomeIcon,
+  LogInIcon,
+  LogOutIcon,
+  MenuIcon,
+  ShoppingBag,
+  Truck,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -8,6 +15,7 @@ import { authClient } from "@/db/auth-client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -32,7 +40,7 @@ export const Header = () => {
               <MenuIcon />
             </Button>
           </SheetTrigger>
-          <SheetContent>
+          <SheetContent className="rounded-l-3xl">
             <SheetHeader>
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
@@ -78,6 +86,35 @@ export const Header = () => {
                   </Button>
                 </div>
               )}
+              <Separator className="my-6" />
+              <div className="flex flex-col space-y-4 text-sm font-medium">
+                <Link href="/" className="flex items-center gap-2">
+                  <HomeIcon size={20} />
+                  <span>Início</span>
+                </Link>
+                <Link href="/my-orders" className="flex items-center gap-2">
+                  <Truck size={20} />
+                  <span>Meus pedidos</span>
+                </Link>
+                <Link
+                  href="/cart/identification"
+                  className="flex items-center gap-2"
+                >
+                  <ShoppingBag size={20} />
+                  <span>Sacola</span>
+                </Link>
+              </div>
+              <Separator className="my-6" />
+              <div className="flex flex-col space-y-4 text-sm font-medium">
+                <Link href="/category/camisetas">Camisetas</Link>
+                <Link href="/category/bermuda-shorts">Bermuda & Shorts</Link>
+                <Link href="/category/calas">Calças</Link>
+                <Link href="/category/jaquetas-moletons">
+                  Jaquetas & Moletons
+                </Link>
+                <Link href="/category/tnis">Tênis</Link>
+                <Link href="/category/acessrios">Acessórios</Link>
+              </div>
             </div>
           </SheetContent>
         </Sheet>

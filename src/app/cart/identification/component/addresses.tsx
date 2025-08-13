@@ -24,6 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Separator } from "@/components/ui/separator";
 import { shippingAddressTable } from "@/db/schema";
 import { useCreateShippingAddress } from "@/hooks/mutation/use-create-shipping-address";
 import { useUpdateCartShippingAddress } from "@/hooks/mutation/use-update-cart-shipping-address";
@@ -156,16 +157,17 @@ const Addresses = ({
         )}
 
         {selectedAddress === "add_new" && (
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle>Adicionar novo</CardTitle>
-            </CardHeader>
+          <div className="mt-6 space-y-6">
+            <Separator />
+
+            <h3 className="font-medium">Adicionar novo</h3>
+
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-6"
               >
-                <CardContent className="grid gap-4">
+                <div className="grid gap-4">
                   <FormField
                     control={form.control}
                     name="email"
@@ -361,12 +363,12 @@ const Addresses = ({
                       )}
                     />
                   </div>
-                </CardContent>
+                </div>
 
                 <div className="px-6 pb-6">
                   <Button
                     type="submit"
-                    className="h-12 w-full text-base"
+                    className="h-12 w-full rounded-full text-base"
                     disabled={
                       createShippingAddressMutation.isPending ||
                       updateCartShippingAddressMutation.isPending
@@ -380,7 +382,7 @@ const Addresses = ({
                 </div>
               </form>
             </Form>
-          </Card>
+          </div>
         )}
       </CardContent>
     </Card>
