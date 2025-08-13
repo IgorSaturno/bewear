@@ -145,7 +145,7 @@ const Addresses = ({
         {selectedAddress && selectedAddress !== "add_new" && (
           <div className="mt-6">
             <Button
-              className="h-12 w-full text-base"
+              className="h-12 w-full rounded-full text-base"
               onClick={handleGoToPayment}
               disabled={updateCartShippingAddressMutation.isPending}
             >

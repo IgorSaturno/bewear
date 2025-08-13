@@ -40,7 +40,6 @@ const Cart = () => {
           <div className="flex h-full max-h-full flex-col overflow-hidden">
             <ScrollArea className="h-full">
               <div className="flex h-full flex-col gap-8">
-                {/* {cartIsLoading && <div>Carregando...</div>} */}
                 {cart?.items.map((item) => (
                   <CartItem
                     key={item.id}
@@ -73,7 +72,9 @@ const Cart = () => {
                 <Link href="/cart/identification">Finalizar a Compra</Link>
               </Button>
               <SheetClose asChild>
-                <p className="text-center underline">Continuar comprando</p>
+                <p className="text-center text-sm underline">
+                  Continuar comprando
+                </p>
               </SheetClose>
             </div>
           )}
