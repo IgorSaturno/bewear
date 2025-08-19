@@ -1,5 +1,6 @@
 import { ShoppingBagIcon } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 
 import { formatCentsToBRL } from "@/helpers/money";
 import { useCart } from "@/hooks/queries/use-cart";
@@ -20,10 +21,20 @@ import CartItem from "./cart-item";
 
 const Cart = () => {
   const { data: cart } = useCart();
+
+  const handleCartClick = () => {
+    if (!cart?.items || cart.items.length === 0) {
+      toast.error("Seu carrinho está vazio!", {
+        description: "Adicione alguns produtos para continuar comprando.",
+      });
+      return;
+    }
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" onClick={handleCartClick}>
           <ShoppingBagIcon />
         </Button>
       </SheetTrigger>

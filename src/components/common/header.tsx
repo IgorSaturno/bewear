@@ -1,20 +1,31 @@
 "use client";
 
 import {
+  ChevronDownIcon,
   HomeIcon,
   LogInIcon,
   LogOutIcon,
   MenuIcon,
   ShoppingBag,
   Truck,
+  UserIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { toast } from "sonner";
 
 import { authClient } from "@/db/auth-client";
+import { useCart } from "@/hooks/queries/use-cart";
 
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { Separator } from "../ui/separator";
 import {
   Sheet,
@@ -27,21 +38,83 @@ import Cart from "./cart";
 
 export const Header = () => {
   const { data: session } = authClient.useSession();
+  const { data: cart } = useCart();
+
+  const handleCartClick = (e: React.MouseEvent) => {
+    if (!cart?.items || cart.items.length === 0) {
+      e.preventDefault();
+      toast.error("Seu carrinho está vazio!");
+      return;
+    }
+  };
+
   return (
     <header className="container mx-auto">
       {/* Desktop Header */}
       <div className="hidden items-center justify-between p-5 lg:flex">
         {/* Left - User greeting */}
-        <div className="flex items-center gap-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-400">
-            <div className="h-2 w-2 rounded-full bg-gray-400"></div>
-          </div>
-          <span className="text-sm font-medium">
-            {session?.user
-              ? `Olá, ${session.user.name?.split(" ")[0]}!`
-              : "Olá, visitante!"}
-          </span>
-        </div>
+        {session?.user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="flex h-auto items-center gap-2 p-0"
+              >
+                <UserIcon className="h-4 w-4" />
+                <span className="text-sm font-medium">
+                  Olá, {session.user.name?.split(" ")[0]}!
+                </span>
+                <ChevronDownIcon className="h-3 w-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48">
+              <DropdownMenuItem asChild>
+                <Link href="/" className="flex items-center gap-2">
+                  <HomeIcon className="h-4 w-4" />
+                  Início
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/my-orders" className="flex items-center gap-2">
+                  <Truck className="h-4 w-4" />
+                  Meus pedidos
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/cart/identification"
+                  className="flex items-center gap-2"
+                  onClick={handleCartClick}
+                >
+                  <ShoppingBag className="h-4 w-4" />
+                  Sacola
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  authClient.signOut();
+                  window.location.href = "/";
+                }}
+                className="flex items-center gap-2"
+              >
+                <LogOutIcon className="h-4 w-4" />
+                Sair
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Button
+            variant="ghost"
+            asChild
+            className="flex h-auto items-center gap-2 p-0"
+          >
+            <Link href="/authentication">
+              <UserIcon className="h-4 w-4" />
+              <span className="text-sm font-medium">Olá, visitante!</span>
+            </Link>
+          </Button>
+        )}
 
         {/* Center - Logo */}
         <Link href="/" className="flex flex-1 justify-center">
@@ -184,6 +257,7 @@ export const Header = () => {
                   <Link
                     href="/cart/identification"
                     className="flex items-center gap-2"
+                    onClick={handleCartClick}
                   >
                     <ShoppingBag size={20} />
                     <span>Sacola</span>
