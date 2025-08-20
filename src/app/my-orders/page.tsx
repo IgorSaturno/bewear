@@ -35,7 +35,10 @@ const MyOrdersPage = async () => {
   return (
     <>
       <Header />
-      <div className="px-5">
+      <div className="px-5 lg:container lg:mx-auto">
+        <div className="py-8">
+          <h1 className="text-2xl font-bold">Meus pedidos</h1>
+        </div>
         <Orders
           orders={orders.map((order) => ({
             id: order.id,

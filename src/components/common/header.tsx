@@ -145,7 +145,7 @@ export const Header = () => {
 
       {/* Desktop Categories */}
       <div className="hidden justify-center pb-4 lg:flex">
-        <nav className="flex items-center gap-8 text-sm text-gray-600">
+        <nav className="flex items-center gap-24 text-sm text-gray-600">
           <Link
             href="/category/camisetas"
             className="transition-colors hover:text-gray-900"
