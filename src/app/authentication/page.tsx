@@ -1,4 +1,4 @@
-import { Header } from "@/components/common/header";
+import MainLayout from "@/components/layouts/main-layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import SignInForm from "./components/sign-in-form";
@@ -6,8 +6,7 @@ import SignUpForm from "./components/sign-up-form";
 
 const Authentication = async () => {
   return (
-    <>
-      <Header />
+    <MainLayout>
       <div className="flex w-full flex-col gap-6 p-5 lg:container lg:mx-auto lg:w-lg">
         <Tabs defaultValue="sign-in">
           <TabsList>
@@ -22,7 +21,7 @@ const Authentication = async () => {
           </TabsContent>
         </Tabs>
       </div>
-    </>
+    </MainLayout>
   );
 };
 

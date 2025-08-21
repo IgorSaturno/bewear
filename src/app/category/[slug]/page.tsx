@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
-import { Header } from "@/components/common/header";
 import ProductItem from "@/components/common/product-item";
+import MainLayout from "@/components/layouts/main-layout";
 import { db } from "@/db";
 import { categoryTable, productTable } from "@/db/schema";
 
@@ -25,8 +25,7 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
     },
   });
   return (
-    <>
-      <Header />
+    <MainLayout>
       <div className="space-y-6 px-5">
         <h2 className="text-xl font-semibold">{category.name}</h2>
         <div className="grid grid-cols-2 gap-4">
@@ -39,7 +38,7 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
           ))}
         </div>
       </div>
-    </>
+    </MainLayout>
   );
 };
 

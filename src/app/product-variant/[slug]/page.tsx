@@ -2,9 +2,8 @@ import { eq } from "drizzle-orm";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
-import Footer from "@/components/common/footer";
-import { Header } from "@/components/common/header";
 import ProductList from "@/components/common/product-list";
+import MainLayout from "@/components/layouts/main-layout";
 import { db } from "@/db";
 import { productTable, productVariantTable } from "@/db/schema";
 import { formatCentsToBRL } from "@/helpers/money";
@@ -40,8 +39,7 @@ const ProductVariantPage = async ({ params }: ProductPageProps) => {
   });
 
   return (
-    <>
-      <Header />
+    <MainLayout>
       <div className="mx-auto max-w-7xl px-5 py-8">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-5">
           {/* Left Column - Product Images */}
@@ -126,8 +124,7 @@ const ProductVariantPage = async ({ params }: ProductPageProps) => {
           />
         </div>
       </div>
-      <Footer />
-    </>
+    </MainLayout>
   );
 };
 

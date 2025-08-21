@@ -2,8 +2,7 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import Footer from "@/components/common/footer";
-import { Header } from "@/components/common/header";
+import MainLayout from "@/components/layouts/main-layout";
 import { db } from "@/db";
 import { shippingAddressTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
@@ -50,8 +49,7 @@ const IdentificationPage = async () => {
   );
 
   return (
-    <div>
-      <Header />
+    <MainLayout>
       <div className="mx-auto max-w-7xl px-5 py-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
@@ -76,10 +74,7 @@ const IdentificationPage = async () => {
           </div>
         </div>
       </div>
-      <div className="mt-12">
-        <Footer />
-      </div>
-    </div>
+    </MainLayout>
   );
 };
 

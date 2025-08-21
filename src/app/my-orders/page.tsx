@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { Header } from "@/components/common/header";
+import MainLayout from "@/components/layouts/main-layout";
 import { db } from "@/db";
 import { orderTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
@@ -33,8 +34,7 @@ const MyOrdersPage = async () => {
   });
 
   return (
-    <>
-      <Header />
+    <MainLayout>
       <div className="px-5 lg:container lg:mx-auto">
         <div className="py-8">
           <h1 className="text-2xl font-bold">Meus pedidos</h1>
@@ -56,7 +56,7 @@ const MyOrdersPage = async () => {
           }))}
         />
       </div>
-    </>
+    </MainLayout>
   );
 };
 

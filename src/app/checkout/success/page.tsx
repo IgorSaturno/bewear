@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Header } from "@/components/common/header";
+import MainLayout from "@/components/layouts/main-layout";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,8 +15,7 @@ import {
 
 const CheckoutSuccessPage = () => {
   return (
-    <>
-      <Header />
+    <MainLayout>
       <Dialog open={true} onOpenChange={() => {}}>
         <DialogContent className="text-center">
           <Image
@@ -46,7 +45,7 @@ const CheckoutSuccessPage = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </MainLayout>
   );
 };
 
