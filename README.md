@@ -265,16 +265,9 @@ Contribuições são bem-vindas! Para contribuir:
 - **Tipos**: PascalCase terminando com 'Type' ou 'Schema'
 - **Sem comentários**: O código deve ser autoexplicativo
 
-## 📄 Licença
+## Demo
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
-## 📞 Suporte
-
-Para dúvidas ou suporte, entre em contato:
-
-- **Email**: seu-email@exemplo.com
-- **GitHub Issues**: [Abrir issue](https://github.com/seu-usuario/bewear/issues)
+[BeweardemoLink](https://bewear-bay.vercel.app/)
 
 ---
 

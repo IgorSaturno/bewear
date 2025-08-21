@@ -1,6 +1,5 @@
 import { ShoppingBagIcon } from "lucide-react";
 import Link from "next/link";
-import { toast } from "sonner";
 
 import { formatCentsToBRL } from "@/helpers/money";
 import { useCart } from "@/hooks/queries/use-cart";
@@ -22,19 +21,10 @@ import CartItem from "./cart-item";
 const Cart = () => {
   const { data: cart } = useCart();
 
-  const handleCartClick = () => {
-    if (!cart?.items || cart.items.length === 0) {
-      toast.error("Seu carrinho está vazio!", {
-        description: "Adicione alguns produtos para continuar comprando.",
-      });
-      return;
-    }
-  };
-
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" onClick={handleCartClick}>
+        <Button variant="ghost" size="icon">
           <ShoppingBagIcon />
         </Button>
       </SheetTrigger>
@@ -51,20 +41,28 @@ const Cart = () => {
           <div className="flex h-full max-h-full flex-col overflow-hidden">
             <ScrollArea className="h-full">
               <div className="flex h-full flex-col gap-8">
-                {cart?.items.map((item) => (
-                  <CartItem
-                    key={item.id}
-                    id={item.id}
-                    productName={item.productVariant.product.name}
-                    productVariantId={item.productVariant.id}
-                    productVariantName={item.productVariant.name}
-                    productVariantImageUrl={item.productVariant.imageUrl}
-                    productVariantPriceInCents={
-                      item.productVariant.priceInCents
-                    }
-                    quantity={item.quantity}
-                  />
-                ))}
+                {cart?.items && cart.items.length > 0 ? (
+                  cart.items.map((item) => (
+                    <CartItem
+                      key={item.id}
+                      id={item.id}
+                      productName={item.productVariant.product.name}
+                      productVariantId={item.productVariant.id}
+                      productVariantName={item.productVariant.name}
+                      productVariantImageUrl={item.productVariant.imageUrl}
+                      productVariantPriceInCents={
+                        item.productVariant.priceInCents
+                      }
+                      quantity={item.quantity}
+                    />
+                  ))
+                ) : (
+                  <div className="flex h-full items-center justify-center">
+                    <p className="text-muted-foreground text-center">
+                      Carrinho Vazio
+                    </p>
+                  </div>
+                )}
               </div>
             </ScrollArea>
           </div>
