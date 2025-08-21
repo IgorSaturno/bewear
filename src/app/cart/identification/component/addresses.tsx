@@ -98,11 +98,11 @@ const Addresses = ({
     }
   };
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Identificação</CardTitle>
+    <Card className="border-0 shadow-sm">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-lg font-semibold">Identificação</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         {isLoading ? (
           <div className="flex justify-center py-8">
             <p className="text-muted-foreground">Carregando endereços...</p>
@@ -111,31 +111,41 @@ const Addresses = ({
           <RadioGroup
             value={selectedAddress}
             onValueChange={setSelectedAddress}
+            className="space-y-4"
           >
             {addresses?.map((address) => (
-              <Card key={address.id}>
-                <CardContent>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value={address.id} id={address.id} />
-                    <div className="flex-1">
-                      <Label htmlFor={address.id} className="cursor-pointer">
-                        <div className="space-y-1">
-                          <p className="text-muted-foreground text-sm">
-                            {formatAddress(address)}
-                          </p>
-                        </div>
-                      </Label>
+              <Card key={address.id} className="border border-gray-200">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-3">
+                      <RadioGroupItem value={address.id} id={address.id} />
+                      <div className="flex-1">
+                        <Label htmlFor={address.id} className="cursor-pointer">
+                          <div className="space-y-1">
+                            <p className="text-sm">{formatAddress(address)}</p>
+                          </div>
+                        </Label>
+                      </div>
                     </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-sm font-medium"
+                    >
+                      Alterar
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
             ))}
 
-            <Card>
-              <CardContent>
-                <div className="flex items-center space-x-2">
+            <Card className="border border-gray-200">
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-3">
                   <RadioGroupItem value="add_new" id="add_new" />
-                  <Label htmlFor="add_new">Adicionar novo endereço</Label>
+                  <Label htmlFor="add_new" className="text-sm font-medium">
+                    Adicionar novo
+                  </Label>
                 </div>
               </CardContent>
             </Card>
@@ -143,15 +153,15 @@ const Addresses = ({
         )}
 
         {selectedAddress && selectedAddress !== "add_new" && (
-          <div className="mt-6">
+          <div className="pt-4">
             <Button
-              className="h-12 w-full rounded-full text-base"
+              className="h-12 w-full rounded-full text-base font-semibold"
               onClick={handleGoToPayment}
               disabled={updateCartShippingAddressMutation.isPending}
             >
               {updateCartShippingAddressMutation.isPending
                 ? "Salvando..."
-                : "Continuar para pagamento"}
+                : "Continuar com o pagamento"}
             </Button>
           </div>
         )}

@@ -52,23 +52,29 @@ const IdentificationPage = async () => {
   return (
     <div>
       <Header />
-      <div className="space-y-4 px-5">
-        <Addresses
-          shippingAddresses={shippingAddresses}
-          defaultShippingAddressId={cart.shippingAddress?.id || null}
-        />
-        <CartSummary
-          subtotalInCents={cartTotalPriceInCents}
-          totalInCents={cartTotalPriceInCents}
-          products={cart.items.map((item) => ({
-            id: item.id,
-            name: item.productVariant.product.name,
-            variantName: item.productVariant.name,
-            quantity: item.quantity,
-            priceInCents: item.productVariant.priceInCents,
-            imageUrl: item.productVariant.imageUrl,
-          }))}
-        />
+      <div className="mx-auto max-w-7xl px-5 py-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <Addresses
+              shippingAddresses={shippingAddresses}
+              defaultShippingAddressId={cart.shippingAddress?.id || null}
+            />
+          </div>
+          <div className="lg:col-span-1">
+            <CartSummary
+              subtotalInCents={cartTotalPriceInCents}
+              totalInCents={cartTotalPriceInCents}
+              products={cart.items.map((item) => ({
+                id: item.id,
+                name: item.productVariant.product.name,
+                variantName: item.productVariant.name,
+                quantity: item.quantity,
+                priceInCents: item.productVariant.priceInCents,
+                imageUrl: item.productVariant.imageUrl,
+              }))}
+            />
+          </div>
+        </div>
       </div>
       <div className="mt-12">
         <Footer />

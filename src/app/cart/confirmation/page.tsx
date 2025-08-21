@@ -52,34 +52,49 @@ const ConfirmationPage = async () => {
   return (
     <div>
       <Header />
-      <div className="space-y-4 px-5">
-        <Card>
-          <CardHeader>
-            <CardTitle>Identificação</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <Card>
-              <CardContent>
-                <p className="text-muted-foreground text-sm">
-                  {formatAddress(cart.shippingAddress)}
-                </p>
+      <div className="mx-auto max-w-7xl px-5 py-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <Card className="border-0 shadow-sm">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg font-semibold">
+                  Confirmação
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="mb-2 text-sm font-semibold">Contato</h3>
+                    <p className="text-muted-foreground text-sm">
+                      {session.user.email}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="mb-2 text-sm font-semibold">Endereço</h3>
+                    <p className="text-muted-foreground text-sm">
+                      {formatAddress(cart.shippingAddress)}
+                    </p>
+                  </div>
+                </div>
+                <FinishOrderButton />
               </CardContent>
             </Card>
-            <FinishOrderButton />
-          </CardContent>
-        </Card>
-        <CartSummary
-          subtotalInCents={cartTotalInCents}
-          totalInCents={cartTotalInCents}
-          products={cart.items.map((item) => ({
-            id: item.id,
-            name: item.productVariant.product.name,
-            variantName: item.productVariant.name,
-            quantity: item.quantity,
-            priceInCents: item.productVariant.priceInCents,
-            imageUrl: item.productVariant.imageUrl,
-          }))}
-        />
+          </div>
+          <div className="lg:col-span-1">
+            <CartSummary
+              subtotalInCents={cartTotalInCents}
+              totalInCents={cartTotalInCents}
+              products={cart.items.map((item) => ({
+                id: item.id,
+                name: item.productVariant.product.name,
+                variantName: item.productVariant.name,
+                quantity: item.quantity,
+                priceInCents: item.productVariant.priceInCents,
+                imageUrl: item.productVariant.imageUrl,
+              }))}
+            />
+          </div>
+        </div>
       </div>
       <div className="mt-12">
         <Footer />
