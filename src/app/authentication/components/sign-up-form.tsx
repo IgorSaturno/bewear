@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -55,6 +55,9 @@ type FormValues = z.infer<typeof formSchema>;
 
 const SignUpForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo") ?? "/";
+  const mergeUrl = `/api/cart/merge?redirectTo=${encodeURIComponent(redirectTo)}`;
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -72,7 +75,7 @@ const SignUpForm = () => {
       password: values.password,
       fetchOptions: {
         onSuccess: () => {
-          router.push("/");
+          router.push(mergeUrl);
         },
         onError: (error) => {
           if (error.error.code === "USER_ALREADY_EXISTS") {

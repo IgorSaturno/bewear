@@ -1,6 +1,9 @@
+"use client";
+
 import { ShoppingBagIcon } from "lucide-react";
 import Link from "next/link";
 
+import { authClient } from "@/db/auth-client";
 import { formatCentsToBRL } from "@/helpers/money";
 import { useCart } from "@/hooks/queries/use-cart";
 
@@ -18,8 +21,15 @@ import {
 } from "../ui/sheet";
 import CartItem from "./cart-item";
 
+const CHECKOUT_PATH = "/cart/identification";
+
 const Cart = () => {
   const { data: cart } = useCart();
+  const { data: session } = authClient.useSession();
+
+  const checkoutHref = session?.user
+    ? CHECKOUT_PATH
+    : `/authentication?redirectTo=${encodeURIComponent(CHECKOUT_PATH)}`;
 
   return (
     <Sheet>
@@ -78,7 +88,7 @@ const Cart = () => {
               <Separator />
 
               <Button className="rounded-full" asChild size="lg">
-                <Link href="/cart/identification">Finalizar a Compra</Link>
+                <Link href={checkoutHref}>Finalizar a Compra</Link>
               </Button>
               <SheetClose asChild>
                 <p className="text-center text-sm underline">

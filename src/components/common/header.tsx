@@ -36,9 +36,15 @@ import {
 } from "../ui/sheet";
 import Cart from "./cart";
 
+const CHECKOUT_PATH = "/cart/identification";
+
 export const Header = () => {
   const { data: session } = authClient.useSession();
   const { data: cart } = useCart();
+
+  const checkoutHref = session?.user
+    ? CHECKOUT_PATH
+    : `/authentication?redirectTo=${encodeURIComponent(CHECKOUT_PATH)}`;
 
   const handleCartClick = (e: React.MouseEvent) => {
     if (!cart?.items || cart.items.length === 0) {
@@ -82,7 +88,7 @@ export const Header = () => {
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link
-                  href="/cart/identification"
+                  href={checkoutHref}
                   className="flex items-center gap-2"
                   onClick={handleCartClick}
                 >
@@ -255,7 +261,7 @@ export const Header = () => {
                     <span>Meus pedidos</span>
                   </Link>
                   <Link
-                    href="/cart/identification"
+                    href={checkoutHref}
                     className="flex items-center gap-2"
                     onClick={handleCartClick}
                   >

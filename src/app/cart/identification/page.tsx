@@ -16,7 +16,7 @@ const IdentificationPage = async () => {
   });
 
   if (!session?.user.id) {
-    redirect("/");
+    redirect("/authentication?redirectTo=/cart/identification");
   }
 
   const cart = await db.query.cartTable.findFirst({

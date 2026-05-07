@@ -7,6 +7,7 @@ import z from "zod";
 import { db } from "@/db";
 import { cartItemTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { readGuestCart, writeGuestCart } from "@/lib/guest-cart";
 
 import { decreaseCartProductQuantitySchema } from "./schema";
 
@@ -19,7 +20,16 @@ export const decreaseCartProductQuantity = async (
   });
 
   if (!session?.user) {
-    throw new Error("Unauthorized");
+    const guestItems = await readGuestCart();
+    const updated = guestItems
+      .map((item) =>
+        item.productVariantId === data.cartItemId
+          ? { ...item, quantity: item.quantity - 1 }
+          : item,
+      )
+      .filter((item) => item.quantity > 0);
+    await writeGuestCart(updated);
+    return;
   }
 
   const cartItem = await db.query.cartItemTable.findFirst({

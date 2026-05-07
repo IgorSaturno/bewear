@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -39,6 +39,9 @@ type FormValues = z.infer<typeof formSchema>;
 
 const SignInForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo") ?? "/";
+  const mergeUrl = `/api/cart/merge?redirectTo=${encodeURIComponent(redirectTo)}`;
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,7 +56,7 @@ const SignInForm = () => {
       password: values.password,
       fetchOptions: {
         onSuccess: () => {
-          router.push("/");
+          router.push(mergeUrl);
         },
         onError: (ctx) => {
           if (ctx.error.code === "USER_NOT_FOUND") {
@@ -80,6 +83,7 @@ const SignInForm = () => {
   const handleSignInWithGoogle = async () => {
     await authClient.signIn.social({
       provider: "google",
+      callbackURL: mergeUrl,
     });
   };
 
