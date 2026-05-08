@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -53,10 +53,12 @@ const formSchema = z
 
 type FormValues = z.infer<typeof formSchema>;
 
-const SignUpForm = () => {
+interface SignUpFormProps {
+  redirectTo: string;
+}
+
+const SignUpForm = ({ redirectTo }: SignUpFormProps) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") ?? "/";
   const mergeUrl = `/api/cart/merge?redirectTo=${encodeURIComponent(redirectTo)}`;
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
