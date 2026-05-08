@@ -133,13 +133,13 @@ const SignInForm = ({ redirectTo }: SignInFormProps) => {
               />
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full cursor-pointer">
                 Entrar
               </Button>
               <Button
                 variant="outline"
                 type="button"
-                className="w-full"
+                className="w-full cursor-pointer"
                 onClick={handleSignInWithGoogle}
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4">
